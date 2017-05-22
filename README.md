@@ -2,12 +2,29 @@
 
 ## Scope
 
+Is there a significat difference between the EEG data from the start of the Season and the end of the season if they had concussion during the season.
+
 ## Tools
 Python package to analyse EEG Data: https://martinos.org/mne/stable/index.html
 
 ## Waves in EEG
 
 ## Data
+Labelling of data:
+
+Data were measured in multiple times per subject, once at the start of the season, once at the end of the season and everytime the subject had a concussion.
+the data is labeled alphabetically from starting from a to represent the EED data collection for different times.
+
+**Ex/**
+
+if a subject has data labeled as:
+
+* a : measurement beginning of the season
+* b : measurement after the first concussion
+* c : measurement after the second concussion
+* d : measurement the end of the season
+
+Note Some subject may not had any concussions, or may have missing data where they did not show up at the beginning of the season.
 
 **Raw EEG Data:**
 
