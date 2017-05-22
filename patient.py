@@ -6,7 +6,7 @@ from config import data_directory
 from eeg_session import EEGSession
 
 
-class Patient():
+class Patient(object):
     def __init__(self, pid):
         """
         loads data for a patient and given a string which represents the patient id (which is a number).
@@ -22,6 +22,7 @@ class Patient():
         self.season_end = None
         self.concussions = []
         self.n_concussions = 0
+        self.columns = ["fp1", "fp2", "f3", "f4", "f7", "f8", "c3", "c4", "p3", "p4", "o1", "o2", "t3", "t4", "t5", "t6", "fz", "cz", "pz"]
         self.load_all(pid)
 
     def load_all(self, pid):
@@ -60,8 +61,8 @@ class Patient():
         :return: an EEGSession object which has a pandas data frame for each of Session.raw and Session.art
         :rtype: EEGSession
         """
-        raw = pandas.read_csv(os.path.join(data_directory, filename + ".raw"))
-        artifacts = pandas.read_csv(os.path.join(data_directory, filename + ".art"))
+        raw = pandas.read_csv(os.path.join(data_directory, filename + ".raw"), names=self.columns)
+        artifacts = pandas.read_csv(os.path.join(data_directory, filename + ".art"), names=self.columns)
         return EEGSession(raw, artifacts)
 
 
@@ -77,7 +78,8 @@ def main():
         for i in range(len(patient.concussions)):
             print("concussion {}: {}".format(i, len(patient.concussions[i].raw)))
         print("season end: {}".format(len(patient.season_end.raw)))
-
+    patient.season_start.extract_windows()
+    print(patient.season_start.raw)
 
 if __name__ == "__main__":
     main()
