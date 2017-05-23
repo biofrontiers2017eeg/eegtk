@@ -10,6 +10,7 @@ class EEGSession():
         self.artifacts = artifacts
         self.window_size = None
         self.n_windows = None
+        self.waves = None
 
     def remove_artifacts(self, color="red"):
         pass
