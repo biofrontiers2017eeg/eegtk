@@ -1,7 +1,12 @@
 import numpy as np
 import pandas as pd
+import scipy as sp
+
 
 from matplotlib import pyplot as plt
+
+
+plot_ignore_columns = ["window", "time"]
 
 
 class EEGSession():
@@ -11,8 +16,12 @@ class EEGSession():
         self.window_size = None
         self.n_windows = None
 
-    def remove_artifacts(self, color="red"):
-        pass
+    def remove_artifacts(self):
+        """
+        for each channel, replaces artifact frames from the raw data frame. artifacts are indicated by 1's in self.artifacts for the same frame/channel
+        """
+        for i, col in enumerate(self.raw.columns):
+            self.raw[col] = pd.Series(np.zeros(self.artifacts[:, i] == 1, self.raw[col].as_matrix, self.raw[col]))
 
     def extract_windows(self, window_size="256"):
         """
@@ -42,12 +51,12 @@ class EEGSession():
         if end == -1:
             end = len(self.raw)
         if channels == "all":
-            channels == [col for col in self.raw.columns if col not in ["window"]]
+            channels == [col for col in self.raw.columns if col not in plot_ignore_columns]
         frames = range(end)
         f, axes = plt.subplots(len(channels))
         for i, axis in enumerate(axes):
             colname = channels[i]
-            axis.plot(frames, self.raw[colname][:end], 'k')
+            axis.plot(frames/256., self.raw[colname][:end], 'k')
             #axis.set_title(colname)
             axis.text(.5, .5, colname, horizontalalignment='center',
                       transform=axis.transAxes, bbox=dict(facecolor='white', alpha=0.5) )
@@ -73,7 +82,7 @@ class EEGSession():
         frames = range(end)
         alpha = 0.5 / np.log(len(windows)) if len(windows) > 1 else 1
         if channels == "all":
-            channels = [col for col in self.raw.columns if col not in ["window"]]
+            channels = [col for col in self.raw.columns if col not in plot_ignore_columns]
         n_channels = len(channels)
         f, axes = plt.subplots(n_channels)
         for i, axis in enumerate(axes):
@@ -81,5 +90,43 @@ class EEGSession():
             channel = self.raw[colname]
             for window in windows:
                 w = channel.loc[self.raw["window"] == window]
-                axis.plot(frames[:len(w)], w, alpha=alpha, color='k')
+                axis.plot(frames[:len(w)]/256., w, alpha=alpha, color='k')
         plt.show()
+
+    def plot_dataframe(self, df_name, channels=""):
+        pass
+
+    def get_examples(self, epoch_size="all", channels="all", coh=False, corr=True):
+        if channels == "all":
+            channels = [col for col in self.raw.columns if col not in plot_ignore_columns]
+        if epoch_size == "all":
+            epoch_size = self.raw.shape[0]
+        n_epochs = int(self.raw.shape[0] / epoch_size)
+        examples = []
+        raw_matrix = self.raw[channels].as_matrix()
+        for i in range(n_epochs):
+            feature_list = []
+
+            raw_epoch = raw_matrix[i*epoch_size:(i+1)*epoch_size]
+            # extract alpha, beta, waves etc.
+
+            # correlation features
+            if corr:
+                feature_list.append(np.ndarray.flatten(np.corrcoef(np.transpose(raw_epoch))))
+
+            # coherance
+            if coh:
+                coherences = []
+                for i in range(raw_epoch.shape[1]):
+                    for j in range(i):
+                        coherences.append(sp.signal.coherence(raw_epoch[:, i], raw_epoch[:, j])[0])
+                feature_list.append(np.hstack(coherences))
+
+            # create feature array for this exmaple
+            features = np.hstack(feature_list)
+
+            examples.append(features)
+        # create numpy array for all these features
+        examples = np.vstack(examples)
+
+        return examples
