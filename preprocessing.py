@@ -2,7 +2,7 @@ import pandas as pd
 from scipy import signal
 
 
-def stft(session):
+def stft(session, **kwargs):
     """
     performs
     :param session: session of eeg data with a raw instance variable containing a pandas data frame of channels
@@ -13,4 +13,5 @@ def stft(session):
     if not hasattr(session, "stft"):
         session.stft = {}
     for col in session.raw.columns:
-        session.stft[col] = signal.stft(session.raw[col])
+        session.stft[col] = signal.stft(session.raw[col], **kwargs)
+
