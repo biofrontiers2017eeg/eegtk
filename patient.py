@@ -1,9 +1,13 @@
 import os
 import sys
-import pandas
+import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt
 
 from config import data_directory
 from eeg_session import EEGSession
+import preprocessing as prep
+
 
 
 class Patient(object):
@@ -61,8 +65,8 @@ class Patient(object):
         :return: an EEGSession object which has a pandas data frame for each of Session.raw and Session.art
         :rtype: EEGSession
         """
-        raw = pandas.read_csv(os.path.join(data_directory, filename + ".raw"), names=self.columns)
-        artifacts = pandas.read_csv(os.path.join(data_directory, filename + ".art"), names=self.columns)
+        raw = pd.read_csv(os.path.join(data_directory, filename + ".raw"), names=self.columns)
+        artifacts = pd.read_csv(os.path.join(data_directory, filename + ".art"), names=self.columns)
         return EEGSession(raw, artifacts)
 
 
@@ -78,8 +82,11 @@ def main():
         for i in range(len(patient.concussions)):
             print("concussion {}: {}".format(i, len(patient.concussions[i].raw)))
         print("season end: {}".format(len(patient.season_end.raw)))
+    prep.stft(patient.season_start)
     patient.season_start.extract_windows()
-    print(patient.season_start.raw)
+    patient.season_start.plot_windows(windows=np.arange(10), channels=["c3", "cz", "c4", "p3", "pz", "p4"])
+    #patient.season_start.plot_channels(channels=["c3", "cz", "c4", "p3", "pz", "p4"], end=256)
+    import pdb; pdb.set_trace()
 
 if __name__ == "__main__":
     main()
