@@ -4,7 +4,7 @@
 
 Is EEG test-retest data consistent enough to identify an individual? Do mTBI and concussive events change the effectiveness of the algorithm due to brainwave changes?
 
-##Abstract
+## Abstract
 Raw brainwave data taken from an electroencephalogram (EEG) system has been shown to be unique for each individual.  Developing a machine learning algorithm to 
 identify a specific person by their raw brainwave data can help to determine if a person’s brainwaves become unidentifiable after a concussion and therefore 
 indicate changes in the brain.
