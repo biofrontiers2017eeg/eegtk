@@ -1,6 +1,8 @@
 import pandas as pd
 from scipy import signal
+import numpy as np
 
+ignore_columns = ["time", "window"]
 
 def stft(session):
     """
@@ -12,10 +14,12 @@ def stft(session):
     """
     if not hasattr(session, "stft"):
         session.stft = {}
-    for col in session.raw.columns:
+
+    columns = [col for col in session.raw.columns if col not in ignore_columns]
+    for col in columns:
         session.stft[col] = signal.stft(session.raw[col])
 
-def extractWaves(session, n=4001, samplingRate=256, wave='alpha'):
+def extractWaves(session, n=4001, samplingRate=256, wave='all'):
     """
     Extracts a given waveform from the EEG data.
     The available waveforms are:
@@ -34,18 +38,27 @@ def extractWaves(session, n=4001, samplingRate=256, wave='alpha'):
     :return: 0 if success, 1 if it failed
     :rtype: int
     """
-    
-    b = FIR(n,samplingRate, wave)
-    if (b == 1):
-        return 1
+    # Create a dictionary of filter coefficients, the keys are waveforms
+    b = {}
+    if (wave == 'all'):
+        waves = ['delta', 'theta', 'alpha', 'beta', 'gamma']
+        for i in waves:
+            b[i] = FIR(n,samplingRate, wave)
+    else:
+        b[wave] = FIR(n,samplingRate, wave)
         
     if not hasattr(session, "waves"):
-        session.waves = pd.DataFrameEmpty()
+        # create a dictionary of pandas dataframes
+        session.waves = {}
     
-    for col in session.raw.columns: 
-        # apply filter, via convolution
-        s = pd.Series(np.convolve(session.raw[col], b, mode='valid'))
-        session.waves["_".join([col,wave])] = s
+    columns = [col for col in session.raw.columns if col not in ignore_columns]
+    for key in b:
+        for col in columns: 
+            # apply filter, via convolution
+            df = pd.DataFrame()
+            s = pd.Series(np.convolve(session.raw[col], b[key], mode='valid'))
+            df["_".join([col,wave])] = s
+        session.waves[key] = df
     return 0
 
 def FIR(n=4001, samplingRate=256, wave='alpha'):

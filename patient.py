@@ -83,6 +83,7 @@ def main():
             print("concussion {}: {}".format(i, len(patient.concussions[i].raw)))
         print("season end: {}".format(len(patient.season_end.raw)))
     prep.stft(patient.season_start)
+    prep.extractWaves(patient.season_start, n=4001, samplingRate=256, wave='alpha')
     patient.season_start.extract_windows()
     patient.season_start.plot_windows(windows=np.arange(10), channels=["c3", "cz", "c4", "p3", "pz", "p4"])
     #patient.season_start.plot_channels(channels=["c3", "cz", "c4", "p3", "pz", "p4"], end=256)
