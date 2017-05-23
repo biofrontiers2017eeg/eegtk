@@ -7,18 +7,12 @@ Is EEG test-retest data consistent enough to identify an individual? Do mTBI and
 ## Tools
 Python package to analyse EEG Data: https://martinos.org/mne/stable/index.html
 
-
 ## Waves in EEG
-<br><b> Delta:</b> 0-4 Hz
+<b> Delta:</b> 0-4 Hz
 <br><b> Theta:</b> 4-8 Hz
 <br><b> Alpha:</b> 8-13 Hz
 <br><b> Beta:</b> 13-20 Hz
 <br><b> Gamma:</b> 20-40 Hz
-
-
-
-
-
 
 ## Data
 Labelling of data:
