@@ -9,6 +9,7 @@ class EEGSession():
         self.raw = raw
         self.artifacts = artifacts
         self.window_size = None
+        self.n_windows = None
 
     def remove_artifacts(self, color="red"):
         pass
@@ -28,6 +29,7 @@ class EEGSession():
         window = np.array(window)
         self.raw['window'] = pd.Series(window[:len(self.raw)], index=self.raw.index)
         self.raw.set_index('window')
+        self.n_windows = np.unique(self.raw['window'])
 
     def plot_channels(self, channels="all", end=-1):
         """
