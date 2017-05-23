@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 from config import data_directory
 from eeg_session import EEGSession
 import preprocessing as prep
-
+from embedding import Embedding
 
 
 class Patient(object):
@@ -22,6 +22,7 @@ class Patient(object):
         :param pid: identifier of patient (a number)
         :type pid: string
         """
+        self.pid = pid
         self.season_start = None
         self.season_end = None
         self.concussions = []
@@ -59,13 +60,13 @@ class Patient(object):
 
     def load_session(self, filename):
         """
-
         :param filename: file prefix, as in: <prefix>.raw and <prefix>.art
         :type filename: string
         :return: an EEGSession object which has a pandas data frame for each of Session.raw and Session.art
         :rtype: EEGSession
         """
         raw = pd.read_csv(os.path.join(data_directory, filename + ".raw"), names=self.columns)
+        raw["time"] = pd.Series([i/256. for i in range(len(raw.index))])
         artifacts = pd.read_csv(os.path.join(data_directory, filename + ".art"), names=self.columns)
         return EEGSession(raw, artifacts)
 
@@ -83,17 +84,15 @@ def main():
             print("concussion {}: {}".format(i, len(patient.concussions[i].raw)))
         print("season end: {}".format(len(patient.season_end.raw)))
     prep.stft(patient.season_start)
-    patient.season_start.extract_windows()
-    patient.season_start.plot_windows(windows=np.arange(10), channels=["c3", "cz", "c4", "p3", "pz", "p4"])
+    examples = patient.season_start.get_examples()
+    emb = Embedding("pca")
+    emb.train(examples)
+    emb_examples = emb.embed(examples)
+
+    #patient.season_start.extract_windows()
+    #patient.season_start.plot_windows(windows=np.arange(10), channels=["c3", "cz", "c4", "p3", "pz", "p4"])
     #patient.season_start.plot_channels(channels=["c3", "cz", "c4", "p3", "pz", "p4"], end=256)
     import pdb; pdb.set_trace()
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
