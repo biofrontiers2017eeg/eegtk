@@ -47,7 +47,7 @@ class Patient(object):
         while os.path.exists(os.path.join(data_directory, pid + let + ".raw")):
             if let == "a":
                 # first file is beginning of season
-                self.pre_test = self.load_session(pid + let, "_pretest")
+                self.pre_test = self.load_session(pid + let, pid + "_pretest")
             else:
                 # middle files are cuncussive events
                 self.intermediate_tests.append(self.load_session(pid + let, "_interm_" + str(i)))
@@ -63,7 +63,7 @@ class Patient(object):
         # count number of concussions
         self.n_concussions = len(self.intermediate_tests)
 
-    def load_session(self, filename, suffix=""):
+    def load_session(self, filename, id=""):
         """
         :param filename: file prefix, as in: <prefix>.raw and <prefix>.art
         :type filename: string
@@ -83,7 +83,7 @@ class Patient(object):
         except:
             print("Can't load data file: {}".format(filename + ".art"))
             return None
-        return EEGSession(filename + suffix, raw, artifacts)
+        return EEGSession(id, raw, artifacts)
 
 
 def main():
