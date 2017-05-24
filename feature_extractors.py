@@ -31,12 +31,12 @@ def coherence(raw_matrix):
 
 def rms(raw_matrix):
     """
-	Calculates the root mean square value of a time series
+    Calculates the root mean square value of a time series
     :param raw_matrix: data matrix where rows are examples and columns are raw features
     :type raw_matrix: ndarray
     :return: feature matrix where rows are examples and columns are calculated features
     :rtype: ndarray
-	"""
+    """
     rmsValues = []
     for i in range(raw_matrix.shape[1]):
         x = raw_matrix[:, i]
@@ -46,12 +46,12 @@ def rms(raw_matrix):
 
 def meanAbs(raw_matrix):
     """
-	Calculates the mean of absolute values
+    Calculates the mean of absolute values
     :param raw_matrix: data matrix where rows are examples and columns are raw features
     :type raw_matrix: ndarray
     :return: feature matrix where rows are examples and columns are calculated features
     :rtype: ndarray
-	"""
+    """
     meanAbsValues = []
     for i in range(raw_matrix.shape[1]):
         x = raw_matrix[:, i]
@@ -61,12 +61,12 @@ def meanAbs(raw_matrix):
 
 def std(raw_matrix):
     """
-	standard deviation of a time series
+    standard deviation of a time series
     :param raw_matrix: data matrix where rows are examples and columns are raw features
     :type raw_matrix: ndarray
     :return: feature matrix where rows are examples and columns are calculated features
     :rtype: ndarray
-	"""
+    """
     stdValues = []
     for i in range(raw_matrix.shape[1]):
         x = raw_matrix[:, i]
@@ -76,20 +76,20 @@ def std(raw_matrix):
 
 def subBandRatio(raw_matrix, nBands=6):
     """
-	The ratio of the mean of absolute values, between adjacent columns
-	Note: This measure was used in a paper where the columns of the matrix represent the
-	frequency bands
+    The ratio of the mean of absolute values, between adjacent columns
+    Note: This measure was used in a paper where the columns of the matrix represent the
+    frequency bands
     :param raw_matrix: data matrix where rows are examples and columns are raw features
     :type raw_matrix: ndarray
     :return: feature matrix where rows are examples and columns are calculated features
     :rtype: ndarray
-	"""
-	ratio = []
-	channel = int(raw_matrix.shape[1]/nBands)
+    """
+    ratio = []
+    channel = int(raw_matrix.shape[1]/nBands)
     for i in range(channel):
-    	x = raw_matrix[:, i*nBands:(i+1)*nBands]
-    	for j in range(x.shape[1]-1):
-    		ratio.append(np.mean(np.abs(x[:,j])) / np.mean(np.abs(x[:,j+1])))
+        x = raw_matrix[:, i*nBands:(i+1)*nBands]
+        for j in range(x.shape[1]-1):
+            ratio.append(np.mean(np.abs(x[:,j])) / np.mean(np.abs(x[:,j+1])))
     return np.hstack(ratio)
 
 extractors = {
