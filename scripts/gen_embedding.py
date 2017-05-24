@@ -1,12 +1,12 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from itertools import cycle
+import sys
 
 from config import pid_noConcussion, pid_3stepProtocol, pid_testRetest, pid_concussion, feature_functions, epoch_size, \
     embedding_args, pid_testlist
 from patient import Patient
 from embedding import Embedding
-
 
 def centroid(data):
     length = len(data)
@@ -38,7 +38,6 @@ for lst, pat_list in zip([pid_testlist], [noCon_pats]):
 # create training data
 train_data = np.vstack([p.pre_test.examples for p in noCon_pats if p.pre_test is not None] +
                        [p.post_test.examples for p in noCon_pats if p.post_test is not None])
-
 # create and train embedding
 emb = Embedding(**embedding_args)
 emb.train(train_data)
@@ -48,7 +47,13 @@ emb.train(train_data)
 colors = cycle(['r', 'b', 'g', 'y'])
 pre_post_distances = []
 for p in noCon_pats:
-    color = colors.next()
+    if (sys.version_info < (3,0)):
+        # for python2 use
+        color = colors.next()
+    else:
+        # for python3 use
+        color = next(colors)
+
     pre_emb = emb.embed(p.pre_test.examples)
     post_emb = emb.embed(p.post_test.examples)
     plt.plot(pre_emb[:, 0], pre_emb[:, 1], linestyle='None', marker="x", color=color, label=p.pid + "_pre")

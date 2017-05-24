@@ -58,6 +58,8 @@ def extractWaves(session, n=4001, samplingRate=256, wave='all'):
             # apply filter, via convolution
             s = pd.Series(np.convolve(session.raw[col], b[key], mode='valid'))
             df['_'.join([col,key])] = s
+        if 'window' in session.raw.columns:
+            df['window'] = session.raw['window'][chop:-chop].reset_index(drop=True)
         df['time'] = session.raw['time'][chop:-chop].reset_index(drop=True)
         session.waves[key] = df
     return 0

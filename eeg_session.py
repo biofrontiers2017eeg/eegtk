@@ -117,14 +117,14 @@ class EEGSession():
     def plot_dataframe(self, df_name, channels=""):
         pass
 
-    def get_examples(self, feature_args, epoch_size="all", channels="all", filtered_waves="true"):
+    def get_examples(self, feature_args, epoch_size="all", channels="all", filtered_waves=True):
         if channels == "all":
             channels = [col for col in self.raw.columns if col not in plot_ignore_columns]
         if filtered_waves:
             extractWaves(self)
             if epoch_size == "all":
-                epoch_size = self.waves.values()[0].shape[0]
-            n_epochs = int(self.waves.values()[0].shape[0] / epoch_size)
+                epoch_size = list(self.waves.values())[0].shape[0]
+            n_epochs = int(list(self.waves.values())[0].shape[0] / epoch_size)
             examples = []
             wave_matrices = {k: v.as_matrix() for k, v in self.waves.items()}
             for i in range(n_epochs):
