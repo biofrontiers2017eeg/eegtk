@@ -57,7 +57,7 @@ def extractWaves(session, n=4001, samplingRate=256, wave='all'):
         for col in columns:
             # apply filter, via convolution
             s = pd.Series(np.convolve(session.raw[col], b[key], mode='valid'))
-            df[col] = s
+            df['_'.join([col,key])] = s
         df['time'] = session.raw['time'][chop:-chop].reset_index(drop=True)
         session.waves[key] = df
     return 0
