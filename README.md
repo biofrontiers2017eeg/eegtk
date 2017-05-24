@@ -58,15 +58,15 @@ Same dimensions as the raw data. Gives a coloring to the EEG data, that shows ho
 3. Features extraction using neural netork
 4. FFT: static
 5. Short-Time FFT: FFR with window
-6. Wavelet
-3. Computer static features for each epoch
+3. Compute static features for each epoch
 4. Channel coherence (each wave)
 5. Channel correlation Pearson (each wave)
 6. Embedding a lower dimensional manifold 
 7. Reduce dimensionality 
 8. Reduce component analysis
 9. Localized linear embedding (tSNE)
-10. Analyse distances in reduced space between 2013 & 2014 baselines 
+10. Wavelet
+11. Analyse distances in reduced space between 2013 & 2014 baselines 
 
 ### Clustering
 
