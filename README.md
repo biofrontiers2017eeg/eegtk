@@ -10,15 +10,8 @@ identify a specific person by their raw brainwave data can help to determine if 
 indicate changes in the brain.
 
 ## Methods
-### Tools
+### <i> Tools </i>
 Python package to analyse EEG Data: https://martinos.org/mne/stable/index.html
-
-### Waves in EEG
-<b> Delta:</b> 0-4 Hz
-<br><b> Theta:</b> 4-8 Hz
-<br><b> Alpha:</b> 8-13 Hz
-<br><b> Beta:</b> 13-20 Hz
-<br><b> Gamma:</b> 20-40 Hz
 
 ### <i> Subjects and Data Aquisition </i>
 The 98 subjects included in the dataset were college aged males (18-24) Division I football players. Each player had a minimum 
@@ -28,7 +21,10 @@ concussion symptoms.  At the time of each measurement, the EEG was recorded for 
 resting state throughout the duration of the recording. During the recording sessions artifacts were identified and removed from 
 the data analysis for accuracy. 
 
-### Biosignal Recording and EEG Parameterisation 
+### <i> Data </i>
+The data is labelled with 
+
+### <i> Biosignal Recording and EEG Parameterisation <i>
 The EEG recordings were performed with electrodes secured at sites FP1, FP2, F7, F3, Fz, F4, F8, T3, C3, Cz, C4, T4, T5, P3, Pz,
 P4, T6, O1, O2 with 19-channel equipment (WAVi).  A headset containing the electrodes is placed on the patient. The electrodes are 
 examined to ensure quality contact.  If contact is unacceptable, conductive gel can be added and the eSocs can be rubbed along 
@@ -36,22 +32,13 @@ the scalp to exfoliate the location of the electrode in order to assist in gaini
 acceptable, a auditory P300 Eyes Closed Protocol is run. The patient is instructed to avoid any synchronized motions and blinks 
 during the P300 test as this will affect the quality of the data.   
 
+### <i> Waves in EEG </i>
+<b> Delta:</b> 0-4 Hz
+<br><b> Theta:</b> 4-8 Hz
+<br><b> Alpha:</b> 8-13 Hz
+<br><b> Beta:</b> 13-20 Hz
+<br><b> Gamma:</b> 20-40 Hz
 
-
-### Data
-Data were measured in multiple times per subject, once at the start of the season, once at the end of the season and everytime the subject had a concussion.
-the data is labeled alphabetically from starting from a to represent the EED data collection for different times.
-
-**Ex/**
-
-if a subject has data labeled as:
-
-* a : measurement beginning of the season
-* b : measurement after the first concussion
-* c : measurement after the second concussion
-* d : measurement the end of the season
-
-Note Some subject may not had any concussions, or may have missing data where they did not show up at the beginning of the season.
 
 **Raw EEG Data:**
 
@@ -109,4 +96,5 @@ Embedding a lower dimensional manifold
 
 ### Prediction Model
 
+![Image of Yaktocat]
 
