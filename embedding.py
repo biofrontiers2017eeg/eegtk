@@ -20,7 +20,7 @@ class Embedding(object):
         if "label_data" in kwargs:
             self.label_data = kwargs["label_data"]
 
-    def train(self, train_data):
+    def train(self, train_data, label_data=False):
         """
         trains an embedding based on passed training data
         :param train_data: training data with which to calculate the embedding
@@ -35,9 +35,10 @@ class Embedding(object):
             label_data : 1xn_sample, labels the data
             train_data : n_samplexn_features
             """
-            lda = LinearDiscriminantAnalysis(n_components=self.n_components)
-            lda.fit(train_data, self.label_data)
-            self.lda = lda
+            if label_data:
+                lda = LinearDiscriminantAnalysis(n_components=self.n_components)
+                lda.fit(train_data, label_data)
+                self.lda = lda
 
     def embed(self, data):
         """

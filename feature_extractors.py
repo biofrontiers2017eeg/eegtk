@@ -84,8 +84,13 @@ def subBandRatio(raw_matrix, nBands=6):
     :return: feature matrix where rows are examples and columns are calculated features
     :rtype: ndarray
 	"""
-    pass
-
+	ratio = []
+	channel = int(raw_matrix.shape[1]/nBands)
+    for i in range(channel):
+    	x = raw_matrix[:, i*nBands:(i+1)*nBands]
+    	for j in range(x.shape[1]-1):
+    		ratio.append(np.mean(np.abs(x[:,j])) / np.mean(np.abs(x[:,j+1])))
+    return np.hstack(ratio)
 
 extractors = {
     "correlation": correlation,
@@ -93,4 +98,5 @@ extractors = {
     "rms": rms,
     "meanAbs": meanAbs,
     "std": std,
+    "subBandRatio": subBandRatio,
 }
