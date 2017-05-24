@@ -15,8 +15,10 @@ class Embedding(object):
         :type kwargs: dict
         """
         self.type = type
-        self.n_components = kwargs["n_components"]
-        self.label_data = kwargs["label_data"]
+        if "n_components" in kwargs:
+            self.n_components = kwargs["n_components"]
+        if "label_data" in kwargs:
+            self.label_data = kwargs["label_data"]
 
     def train(self, train_data):
         """

@@ -7,7 +7,7 @@ from preprocessing import extractWaves
 
 
 from matplotlib import pyplot as plt
-from config import data_directory
+from config import feature_directory
 
 
 plot_ignore_columns = ["window", "time"]
@@ -26,7 +26,10 @@ class EEGSession(object):
         self.window_size = None
         self.n_windows = None
         self.examples = None
-        self.remove_artifacts(artifact_remove_mode)
+        try:
+            self.remove_artifacts(artifact_remove_mode)
+        except:
+            pass
 
     def remove_artifacts(self, mode="normal"):
         """
@@ -149,6 +152,8 @@ class EEGSession(object):
         :return: data matrix where rows are examples and colums are calculated features
         :rtype: np.ndarray
         """
+        if self.examples is not None:
+            return self.examples
         if channels == "all":
             channels = [col for col in self.raw.columns if col not in plot_ignore_columns]
         if filtered_waves:
@@ -157,7 +162,7 @@ class EEGSession(object):
                 epoch_size = list(self.waves.values())[0].shape[0]
             n_epochs = int(list(self.waves.values())[0].shape[0] / epoch_size)
             examples = []
-            wave_matrices = {k: v.as_matrix() for k, v in self.waves.items()}
+            wave_matrices = {k: v[channels].as_matrix() for k, v in self.waves.items()}
             for i in range(n_epochs):
                 feature_list = []
                 for wave_name, wave_matrix in wave_matrices.items():
@@ -199,11 +204,26 @@ class EEGSession(object):
 
         return self.examples
 
-    def save_examples(self):
+    def save_examples(self, subfolder):
         """
-        Saves examples to the data folder with .csv extension
+        Saves examples to the feature folder with .csv extension
         """
         if self.examples is not None:
-            np.savetxt(os.path.join(data_directory, self.id + ".csv"), self.examples, delimiter=",")
+            np.savetxt(os.path.join(feature_directory, subfolder, self.id + ".csv"), self.examples, delimiter=",")
         else:
             print("Examples has not been computed yet, not saving anything")
+
+    def load_examples(self, subfolder):
+        """
+        loads examples from the feature folder
+        :return:
+        :rtype:
+        """
+        if os.path.exists(os.path.join(feature_directory, subfolder, self.id + ".csv")):
+            self.examples = np.loadtxt(os.path.join(feature_directory, subfolder, self.id + ".csv"), delimiter=",", dtype=np.float64)
+            if np.any(np.isnan(self.examples)):
+                self.examples = None
+        else:
+            print("Examples file not found, loading nothing")
+            self.examples = None
+        return self.examples

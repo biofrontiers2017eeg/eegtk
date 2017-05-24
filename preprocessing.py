@@ -4,6 +4,7 @@ import numpy as np
 
 ignore_columns = ["time", "window"]
 
+
 def stft(session, **kwargs):
     """
     performs
@@ -17,6 +18,7 @@ def stft(session, **kwargs):
     columns = [col for col in session.raw.columns if col not in ignore_columns]
     for col in columns:
         session.stft[col] = signal.stft(session.raw[col])
+
 
 def extractWaves(session, n=4001, samplingRate=256, wave='all'):
     """
@@ -43,9 +45,9 @@ def extractWaves(session, n=4001, samplingRate=256, wave='all'):
     if (wave == 'all'):
         waves = ['delta', 'theta', 'alpha', 'beta', 'gamma']
         for i in waves:
-            b[i] = FIR(n,samplingRate, i)
+            b[i] = FIR(n, samplingRate, i)
     else:
-        b[wave] = FIR(n,samplingRate, wave)
+        b[wave] = FIR(n, samplingRate, wave)
 
     if not hasattr(session, "waves"):
         # create a dictionary of pandas dataframes
@@ -57,12 +59,14 @@ def extractWaves(session, n=4001, samplingRate=256, wave='all'):
         for col in columns:
             # apply filter, via convolution
             s = pd.Series(np.convolve(session.raw[col], b[key], mode='valid'))
-            df['_'.join([col,key])] = s
+            #df['_'.join([col,key])] = s  # includes wave name
+            df[col] = s  # doesn't include wave name
         if 'window' in session.raw.columns:
             df['window'] = session.raw['window'][chop:-chop].reset_index(drop=True)
         df['time'] = session.raw['time'][chop:-chop].reset_index(drop=True)
         session.waves[key] = df
     return 0
+
 
 def FIR(n=4001, samplingRate=256, wave='alpha'):
     """

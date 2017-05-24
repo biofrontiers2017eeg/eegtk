@@ -11,11 +11,11 @@ from embedding import Embedding
 
 
 class Patient(object):
-    def __init__(self, pid):
+    def __init__(self, pid, subfolder, load_session_raw=True, load_session_examples=False):
         """
         loads data for a patient and given a string which represents the patient id (which is a number).
         for example, file 1a.raw represents raw measurements from the first session for patient 1.
-        Stores results as instance varibles of this object.
+        Stores results as instance variables of this object.
 
         IMPORTANT: Requires that you set the 'data_directory' variable in config.py
 
@@ -28,7 +28,17 @@ class Patient(object):
         self.intermediate_tests = []
         self.n_concussions = 0
         self.columns = ["fp1", "fp2", "f3", "f4", "f7", "f8", "c3", "c4", "p3", "p4", "o1", "o2", "t3", "t4", "t5", "t6", "fz", "cz", "pz"]
-        self.load_all(self.pid)
+        self.make_sessions(self.pid, load_session_raw, load_session_examples, subfolder)
+
+    def make_sessions(self, pid, load_session_raw, load_session_examples, subfolder):
+        if load_session_raw:
+            self.load_all(pid)
+        else:
+            self.pre_test = EEGSession(pid + "_pretest", None, None)
+            self.post_test = EEGSession(pid + "_post_test", None, None)
+        if load_session_examples:
+            self.pre_test.load_examples(subfolder)
+            self.post_test.load_examples(subfolder)
 
     def load_all(self, pid):
         """
