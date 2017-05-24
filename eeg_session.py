@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 from feature_extractors import extractors
+from preprocessing import extractWaves
 
 
 from matplotlib import pyplot as plt
@@ -20,7 +21,7 @@ class EEGSession():
         self.window_size = None
         self.n_windows = None
 
-    def remove_artifacts(self):
+    def remove_artifacts(self, mode="normal"):
         """
         for each channel, replaces artifact frames from the raw data frame. artifacts are indicated by 1's in self.artifacts for the same frame/channel
         """
@@ -29,7 +30,19 @@ class EEGSession():
         for i, col in enumerate(cols):
             # make sure the artifacts file is the same length as the raw file. this is not true for some datasets
             if len(self.artifacts.as_matrix()[:, i]) == len(self.raw[col].as_matrix()):
-                self.raw[col] = pd.Series(np.where(self.artifacts.as_matrix()[:, i] == 1, np.zeros_like(self.raw[col].as_matrix()), self.raw[col].as_matrix()), dtype=np.float64)
+                if mode == "zero":
+                    replacements = np.zeros_like(self.raw[col].as_matrix())
+                elif mode == "normal":
+                    # mean of everything that is not anomalous
+                    chan_mean = np.mean(self.raw[col].as_matrix()[[np.where(self.raw[col].as_matrix())]])
+                    chan_std = np.std(self.raw[col].as_matrix()[[np.where(self.raw[col].as_matrix())]])
+                    replacements = np.random.normal(chan_mean, chan_std, size = self.raw[col].as_matrix().shape)
+                self.raw[col] = pd.Series(np.where(self.artifacts[col].as_matrix() == 1, replacements, self.raw[col].as_matrix()), dtype=np.float64)
+                if np.any(pd.isnull(self.raw[col])):
+                    print("{}: NaNs exist after artifact removal, setting raw to 'None'".format(self.id))
+                    self.raw = None
+                    return
+
 
     def extract_windows(self, window_size="256"):
         """
@@ -104,29 +117,54 @@ class EEGSession():
     def plot_dataframe(self, df_name, channels=""):
         pass
 
-    def get_examples(self, feature_args, epoch_size="all", channels="all"):
+    def get_examples(self, feature_args, epoch_size="all", channels="all", filtered_waves="true"):
         if channels == "all":
             channels = [col for col in self.raw.columns if col not in plot_ignore_columns]
-        if epoch_size == "all":
-            epoch_size = self.raw.shape[0]
-        n_epochs = int(self.raw.shape[0] / epoch_size)
-        examples = []
-        raw_matrix = self.raw[channels].as_matrix()
-        for i in range(n_epochs):
-            feature_list = []
+        if filtered_waves:
+            extractWaves(self)
+            if epoch_size == "all":
+                epoch_size = self.waves.values()[0].shape[0]
+            n_epochs = int(self.waves.values()[0].shape[0] / epoch_size)
+            examples = []
+            wave_matrices = {k: v.as_matrix() for k, v in self.waves.items()}
+            for i in range(n_epochs):
+                feature_list = []
+                for wave_name, wave_matrix in wave_matrices.items():
+                    raw_epoch = wave_matrix[i*epoch_size:(i+1)*epoch_size].astype(np.float64)
+                    # extract alpha, beta, waves etc.
+                    for extractor, args in feature_args:
+                        extractor = extractors[extractor]
+                        feature_list.append(extractor(raw_epoch, *args))
 
-            raw_epoch = raw_matrix[i*epoch_size:(i+1)*epoch_size].astype(np.float64)
-            # extract alpha, beta, waves etc.
-            for extractor, args in feature_args:
-                extractor = extractors[extractor]
-                feature_list.append(extractor(raw_epoch, *args))
+                # create feature array for this exmaple
+                features = np.hstack(feature_list)
 
-            # create feature array for this exmaple
-            features = np.hstack(feature_list)
+                examples.append(features)
+            # create numpy array for all these features
+            self.examples = np.vstack(examples)
+            print("features for {} have {} NaN values".format(self.id, np.sum(np.isnan(self.examples))))
+        else:
+            if epoch_size == "all":
+                epoch_size = self.raw.shape[0]
+            n_epochs = int(self.raw.shape[0] / epoch_size)
+            examples = []
+            raw_matrix = self.raw[channels].as_matrix()
+            for i in range(n_epochs):
+                feature_list = []
 
-            examples.append(features)
-        # create numpy array for all these features
-        self.examples = np.vstack(examples)
+                raw_epoch = raw_matrix[i*epoch_size:(i+1)*epoch_size].astype(np.float64)
+                # extract features for each feature argument
+                for extractor, args in feature_args:
+                    extractor = extractors[extractor]
+                    feature_list.append(extractor(raw_epoch, *args))
+
+                # create feature array for this exmaple
+                features = np.hstack(feature_list)
+
+                examples.append(features)
+            # create numpy array for all these features
+            self.examples = np.vstack(examples)
+            print("features for {} have {} NaN values".format(self.id, np.sum(np.isnan(self.examples))))
 
         return self.examples
 
