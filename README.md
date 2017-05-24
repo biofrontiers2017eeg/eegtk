@@ -28,7 +28,7 @@ examined to ensure quality contact.  If contact is unacceptable, conductive gel 
 the scalp to exfoliate the location of the electrode in order to assist in gaining proper contact.  Once contact is deemed 
 acceptable, a auditory P300 Eyes Closed Protocol is run. The patient is instructed to avoid any synchronized motions and blinks 
 during the P300 test as this will affect the quality of the data.   
-![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
+![Image of 10-20 array](https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwj8s-3Zw4nUAhVBiFQKHRbiCYIQjRwIBw&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2F10-20_system_(EEG)&psig=AFQjCNFLlXUBjBit5X2XD1Npa1lB_D9Maw&ust=1495749621200490)
 
 
 ### <i> Data </i>
