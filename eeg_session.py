@@ -19,13 +19,14 @@ class EEGSession(object):
     measurements for each time step (rows are time steps and columns are channels) where there are 256 time steps per
     second
     """
-    def __init__(self, id, raw, artifacts):
+    def __init__(self, id, raw, artifacts, artifact_remove_mode="normal"):
         self.id = str(id)
         self.raw = raw
         self.artifacts = artifacts
         self.window_size = None
         self.n_windows = None
         self.examples = None
+        self.remove_artifacts(artifact_remove_mode)
 
     def remove_artifacts(self, mode="normal"):
         """
