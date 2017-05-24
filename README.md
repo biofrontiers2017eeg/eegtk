@@ -23,7 +23,7 @@ Python package to analyse EEG Data: https://martinos.org/mne/stable/index.html
 Data were measured in multiple times per subject, once at the start of the season, once at the end of the season and everytime the subject had a concussion.
 the data is labeled alphabetically from starting from a to represent the EED data collection for different times.
 
-**Ex/**
+**Example**
 
 if a subject has data labeled as:
 
