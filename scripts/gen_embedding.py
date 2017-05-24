@@ -10,15 +10,10 @@ from embedding import Embedding
 
 colors = cycle(['r', 'b', 'g', 'y', 'c', 'm', 'k'])
 
-train_lists = [pid_concussion, pid_noConcussion]
-examples_lists = [[], []]
-train_examples = []
-labels = ["concussion", "noconcussion"]
-
 
 def embed_and_plot(emb, examples, all_color=None, linewidth=2):
     pre_post_distances = []
-    alpha = 0.5 / np.log(len(examples)) if len(examples) > 1 else 1
+    alpha = 0.2 / np.log(len(examples)) if len(examples) > 1 else 1
     for tup in examples:
         if all_color is None:
             if sys.version_info < (3, 0):
@@ -50,12 +45,18 @@ def centroid(data):
     return np.array([float(x_sum)/length, float(y_sum)/length])
 
 # get training data from un-concussed individuals
-
 n_keep = 1000
 
+train_lists = [pid_concussion, pid_noConcussion]
+train_bools = [True, False]
+examples_lists = [[], []]
+train_examples = []
+labels = ["concussion", "noconcussion"]
+
 # for lst, pat_list in zip([pid_noConcussion, pid_3stepProtocol, pid_testRetest, pid_concussion], [noCon_pats, step_pats, retest_pats, con_pats]):
-#for lst, pat_list in zip([pid_noConcussion], [noCon_pats]):
-for i, pid_list in enumerate(train_lists):
+# for lst, pat_list in zip([pid_noConcussion], [noCon_pats]):
+i = 0
+for pid_list, train_bool in zip(train_lists, train_bools):
     for pid in pid_list:
         print("Processing pid: {}".format(pid))
         p = Patient(pid, subfolder, load_session_raw=False, load_session_examples=True)
@@ -71,8 +72,10 @@ for i, pid_list in enumerate(train_lists):
             if post is not None:
                 np.random.shuffle(post)
         if post is not None and pre is not None:
-            train_examples.append((pid, pre, post))
+            if train_bool:
+                train_examples.append((pid, pre, post))
             examples_lists[i].append((pid, pre, post))
+    i += 1
 
 # create training data
 train_data = np.vstack([tup[1][:n_keep] for tup in train_examples] + [tup[2][:n_keep] for tup in train_examples])
@@ -80,12 +83,15 @@ train_data = np.vstack([tup[1][:n_keep] for tup in train_examples] + [tup[2][:n_
 emb = Embedding(**embedding_args)
 emb.train(train_data)
 
+# plot both
 # visualize embedding
 colors = ["r", "b"]
-f = plt.figure()
+f = plt.figure(figsize=(10, 10))
 for label, examples_list, color in zip(labels, examples_lists, colors):
     distances = embed_and_plot(emb, examples_list, all_color=color)
-plt.title("{} pre/post test centroid distance".format(label))
-plt.legend()
+plt.title("pre/post test centroid distance".format())
+plt.xlabel("PC1")
+plt.ylabel("PC2")
+#plt.legend()
+plt.savefig(subfolder + "_pc1vs2", dpi=300, transparent=True)
 plt.show()
-plt.savefig("distances")
