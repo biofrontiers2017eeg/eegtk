@@ -15,3 +15,9 @@ pid_concussion = np.arange(55, 99)  # patients 55-98 were assessed for concussio
 feature_functions = [
     ("correlation", []),
 ]
+
+
+embedding_args = {
+    "mode": "pca",
+    "n_components": 2,
+}
