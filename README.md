@@ -4,8 +4,7 @@
 changes?
 
 ## Scope
-Pattern Recognition and Classification in Time Series Data 
-
+Pattern recognition and classification in time series data 
 
 ## Abstract
 Raw brainwave data taken from an electroencephalogram (EEG) system has been shown to be unique for each individual.  Developing a machine learning algorithm to 
@@ -24,6 +23,14 @@ concussion symptoms.  At the time of each measurement, the EEG was recorded for 
 resting state throughout the duration of the recording. During the recording sessions artifacts were identified and removed from 
 the data analysis for accuracy. 
 
+### <i> Biosignal Recording and EEG Parameterisation <i>
+The EEG recordings were performed with electrodes secured at sites FP1, FP2, F7, F3, Fz, F4, F8, T3, C3, Cz, C4, T4, T5, P3, Pz,
+P4, T6, O1, O2 with 19-channel equipment (WAVi).  A headset containing the electrodes is placed on the patient. The electrodes are 
+examined to ensure quality contact.  If contact is unacceptable, conductive gel can be added and the eSocs can be rubbed along 
+the scalp to exfoliate the location of the electrode in order to assist in gaining proper contact.  Once contact is deemed 
+acceptable, a auditory P300 Eyes Closed Protocol is run. The patient is instructed to avoid any synchronized motions and blinks 
+during the P300 test as this will affect the quality of the data.   
+
 ### <i> Data </i>
 The subject data is anonymized with number labels, each number represents a different subject. The letters attached to the numbers
 represent the session (i.e. a=first session, b=second session etc.). Each session has two files a .raw and a .art. 
@@ -33,13 +40,10 @@ The .raw files contain the raw waves  and the .art contain artifacting data for 
 * 1= bad data that should be discarded 
 * 2= okay data that can either be used or discarded
 
-### <i> Biosignal Recording and EEG Parameterisation <i>
-The EEG recordings were performed with electrodes secured at sites FP1, FP2, F7, F3, Fz, F4, F8, T3, C3, Cz, C4, T4, T5, P3, Pz,
-P4, T6, O1, O2 with 19-channel equipment (WAVi).  A headset containing the electrodes is placed on the patient. The electrodes are 
-examined to ensure quality contact.  If contact is unacceptable, conductive gel can be added and the eSocs can be rubbed along 
-the scalp to exfoliate the location of the electrode in order to assist in gaining proper contact.  Once contact is deemed 
-acceptable, a auditory P300 Eyes Closed Protocol is run. The patient is instructed to avoid any synchronized motions and blinks 
-during the P300 test as this will affect the quality of the data.   
+<b> Raw EEG Data </b>
+* 19 columns, ~61440 rows (256 s time step total of 4 minute data)
+* 98 Subjects
+
 
 ### <i> Waves in EEG </i>
 <b> Delta:</b> 0-4 Hz
@@ -51,8 +55,6 @@ during the P300 test as this will affect the quality of the data.
 
 **Raw EEG Data:**
 
-* 19 columns, ~61440 rows (256 s time step total of 4 minute data)
-* 98 Subjects
 
 **Art file (Artifacts)**
 Same dimensions as the raw data. Gives a coloring to the EEG data, that shows how reliable that data is.
