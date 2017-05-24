@@ -13,17 +13,28 @@ from config import data_directory
 plot_ignore_columns = ["window", "time"]
 
 
-class EEGSession():
+class EEGSession(object):
+    """
+    This class represents an EEG session that has a "raw" file and an "artifact" file. The raw file contains channel
+    measurements for each time step (rows are time steps and columns are channels) where there are 256 time steps per
+    second
+    """
     def __init__(self, id, raw, artifacts):
         self.id = str(id)
         self.raw = raw
         self.artifacts = artifacts
         self.window_size = None
         self.n_windows = None
+        self.examples = None
 
     def remove_artifacts(self, mode="normal"):
         """
         for each channel, replaces artifact frames from the raw data frame. artifacts are indicated by 1's in self.artifacts for the same frame/channel
+        :param mode: specifies what to do when replacing artifacts. options are:
+            "zero": replace with zeros (these sections have zero variance and will mess up correlation features)
+            "normal": replace with data from a random normal distribution with the same mean and variance as all
+                non-artifact data in that channel
+        :type mode: string
         """
         cols = [col for col in self.raw.columns if col not in plot_ignore_columns]
         # replace each colums with zeros where the artifacts matrix is 1's:
@@ -43,9 +54,10 @@ class EEGSession():
                     self.raw = None
                     return
 
-
     def extract_windows(self, window_size="256"):
         """
+        adds a "windows" column to pandas in order to plot several windows on top of one another. the value in this
+        column increments by 1 ever <window_size> time steps
         :param window_size: number of frames in a window
         :type window_size: string
         :return: dataframe with "window" column
@@ -118,6 +130,24 @@ class EEGSession():
         pass
 
     def get_examples(self, feature_args, epoch_size="all", channels="all", filtered_waves=True):
+        """
+        generates data examples from this session. time series are split up into epochs and static features are
+        computed for each epoch. Each epoch is treated as a separate example from this session
+        :param feature_args: a list of tuples that specifies the features to calculate. the first element of each tuple
+            is a string which corresponds to the feature being calculated. the second element of the tuple is a list of
+            positional arguments which will be passed to the feature generation function
+        :type feature_args: list
+        :param epoch_size: size of epoch or "all"
+        :type epoch_size: int or string
+        :param channels: list of strings which specify which columns to use to calculate features. corresponds to
+            columns in the pandas data array
+        :type channels: list
+        :param filtered_waves: indicates whether to calculate features based on the raw features or the filtered (alpha,
+            beta, ...) versions of those waves.
+        :type filtered_waves: bool
+        :return: data matrix where rows are examples and colums are calculated features
+        :rtype: np.ndarray
+        """
         if channels == "all":
             channels = [col for col in self.raw.columns if col not in plot_ignore_columns]
         if filtered_waves:
@@ -169,4 +199,10 @@ class EEGSession():
         return self.examples
 
     def save_examples(self):
-        np.savetxt(os.path.join(data_directory, self.id + ".csv"), self.examples, delimiter=",")
+        """
+        Saves examples to the data folder with .csv extension
+        """
+        if self.examples is not None:
+            np.savetxt(os.path.join(data_directory, self.id + ".csv"), self.examples, delimiter=",")
+        else:
+            print("Examples has not been computed yet, not saving anything")
