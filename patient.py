@@ -39,7 +39,7 @@ class Patient(object):
 
         """
         if not os.path.exists(os.path.join(data_directory, pid + "a.raw")):
-            print("First file: {0}a.raw not found, not loading.".format(pid))
+            print("First file: {0}a.raw not found, not loading. path: {1}".format(pid, data_directory))
             return
         # load each patient session
         let = "a"

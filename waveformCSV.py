@@ -19,33 +19,37 @@ def SaveWave2csv(pid, v=False, extension='raw', inOneCSV=False, nfilterCoeff=400
     printINFO(v, "Patient ID: {}".format(pid))
     
     p = patient.Patient(pid)
-    
-    printINFO(v, "Extracting waves for pre_test!")
-    preprocessing.extractWaves(p.pre_test, n=nfilterCoeff, samplingRate=256, wave='all')
+
+    if p.pre_test is not None:
+        printINFO(v, "Extracting waves for pre_test!")
+        preprocessing.extractWaves(p.pre_test, n=nfilterCoeff, samplingRate=256, wave='all')
     
     printINFO(v, "Extracting waves for intermediate_tests!")
     for i in range(len(p.intermediate_tests)):
         preprocessing.extractWaves(p.intermediate_tests[i], n=nfilterCoeff, samplingRate=256, wave='all')
     
-    printINFO(v, "Extracting waves for post_test!")
-    preprocessing.extractWaves(p.post_test, n=nfilterCoeff, samplingRate=256, wave='all')
+    if p.post_test is not None:
+        printINFO(v, "Extracting waves for post_test!")
+        preprocessing.extractWaves(p.post_test, n=nfilterCoeff, samplingRate=256, wave='all')
     
     printINFO(v, "Saving extracting waves to files!")
     if (inOneCSV):
-        # Save pre_test to csv
-        fname = "".join([pid,'a_waves.', extension])
-        fpath = os.path.join(path,fname)
-        tmp = list(p.pre_test.waves.values())
-        
-        for j in range(len(tmp)-1):
-            tmp[j].drop('time', axis=1, inplace=True)
-        
-        df = pd.concat(tmp, axis=1)
-        printINFO(v,"Saving file: {}".format(fpath))
-        df.to_csv(fpath, index=False)
+        if p.pre_test is not None:
+            # Save pre_test to csv
+            fname = "".join([pid,'a_waves.', extension])
+            fpath = os.path.join(path,fname)
+            tmp = list(p.pre_test.waves.values())
+            
+            for j in range(len(tmp)-1):
+                tmp[j].drop('time', axis=1, inplace=True)
+            
+            df = pd.concat(tmp, axis=1)
+            printINFO(v,"Saving file: {}".format(fpath))
+            df.to_csv(fpath, index=False)
 
         # Save intermediate_tests to csv
-        for i in range(len(p.intermediate_tests)):
+        nintermediate = len(p.intermediate_tests)
+        for i in range(nintermediate):
 
             fname = "".join([pid, getLetter(i+1), '_waves.', extension])
             fpath = os.path.join(path,fname)
@@ -58,40 +62,43 @@ def SaveWave2csv(pid, v=False, extension='raw', inOneCSV=False, nfilterCoeff=400
             printINFO(v,"Saving file: {}".format(fpath))
             df.to_csv(fpath, index=False)
 
-        # Save post_test to csv
-        fname = "".join([pid, getLetter(i+2), '_waves.', extension])
-        fpath = os.path.join(path,fname)
-        tmp = list(p.post_test.waves.values())
+        if p.post_test is not None:
+            # Save post_test to csv
+            fname = "".join([pid, getLetter(nintermediate+1), '_waves.', extension])
+            fpath = os.path.join(path,fname)
+            tmp = list(p.post_test.waves.values())
 
-        for j in range(len(tmp)-1):
-            tmp[j].drop('time', axis=1, inplace=True)
-        
-        df = pd.concat(tmp, axis=1)
-        printINFO(v,"Saving file: {}".format(fpath))
-        df.to_csv(fpath, index=False)
+            for j in range(len(tmp)-1):
+                tmp[j].drop('time', axis=1, inplace=True)
+            
+            df = pd.concat(tmp, axis=1)
+            printINFO(v,"Saving file: {}".format(fpath))
+            df.to_csv(fpath, index=False)
 
     else:
         # Will create one csv file for each waveform
         for wave in waves:
-            # save pre_test to csv
-            fname = "".join([pid,'a_',wave,'.', extension])
-            fpath = os.path.join(path,fname)
-            printINFO(v,"Saving file: {}".format(fpath))
-            p.pre_test.waves[wave].to_csv(fpath, index=False)
+            if p.pre_test is not None:
+                # save pre_test to csv
+                fname = "".join([pid,'a_',wave,'.', extension])
+                fpath = os.path.join(path,fname)
+                printINFO(v,"Saving file: {}".format(fpath))
+                p.pre_test.waves[wave].to_csv(fpath, index=False)
 
             # save intermediate_tests to csv
-            for i in range(len(p.concussions)):
-
+            nintermediate = len(p.intermediate_tests)
+            for i in range(len(p.intermediate_tests)):
                 fname = "".join([pid, getLetter(i+1), '_', wave,'.', extension])
                 fpath = os.path.join(path,fname)
                 printINFO(v,"Saving file: {}".format(fpath))
                 p.intermediate_tests[i].waves[wave].to_csv(fpath, index=False)
 
-            # save post_end to csv
-            fname = "".join([pid, getLetter(i+2), '_', wave,'.', extension])
-            fpath = os.path.join(path,fname)
-            printINFO(v,"Saving file: {}".format(fpath))
-            p.post_test.waves[wave].to_csv(fpath, index=False)
+            if p.post_test is not None:
+                # save post_end to csv
+                fname = "".join([pid, getLetter(nintermediate+2), '_', wave,'.', extension])
+                fpath = os.path.join(path,fname)
+                printINFO(v,"Saving file: {}".format(fpath))
+                p.post_test.waves[wave].to_csv(fpath, index=False)
 
 
 if __name__ == '__main__':
