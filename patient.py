@@ -63,12 +63,12 @@ class Patient(object):
         # count number of concussions
         self.n_concussions = len(self.intermediate_tests)
 
-    def load_session(self, filename, id=""):
+    def load_session(self, filename, id):
         """
         :param filename: file prefix, as in: <prefix>.raw and <prefix>.art
         :type filename: string
-        :param suffix: optional suffix for the id of the eeg session
-        :type suffix: string
+        :param id: id of the eeg session
+        :type id: string
         :return: an EEGSession object which has a pandas data frame for each of Session.raw and Session.art
         :rtype: EEGSession
         """
