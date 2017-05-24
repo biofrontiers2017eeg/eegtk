@@ -56,26 +56,23 @@ Same dimensions as the raw data. Gives a coloring to the EEG data, that shows ho
 1. Extract (𝜶, 𝛽, 𝛾,𝜃) Waveform
 2. Divide into 2s epochs
 3. Features extraction using neural netork
-4. FFT: static
-5. Short-Time FFT: FFR with window
-3. Compute static features for each epoch
-4. Channel coherence (each wave)
-5. Channel correlation Pearson (each wave)
-6. Embedding a lower dimensional manifold 
-7. Reduce dimensionality 
-8. Reduce component analysis
-9. Localized linear embedding (tSNE)
-10. Wavelet
-11. Analyse distances in reduced space between 2013 & 2014 baselines 
+    a. FFT: static
+    b. Short-Time FFT: FFR with window
+    c. Compute static features for each epoch
+    d. Channel coherence (each wave)
+    e. Channel correlation Pearson (each wave)
+4. Embedding a lower dimensional manifold 
+    a. PCA 
+    b. LDA
+    c. Localized linear embedding (tSNE)
+5. Analyse distances in reduced space between 2013 & 2014 baselines 
 
 ### Clustering
-
 * Aggloremative
 * k-means
 * NNMF (Non Negative Matrix Factorization)
 
 #### Measures
-
 * Dynamics Time warping (Distance Meausure)
 
 ## Results
