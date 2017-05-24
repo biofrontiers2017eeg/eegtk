@@ -36,7 +36,7 @@ The subject data is anonymized with number labels, each number represents a diff
 represent the session (i.e. a=first session, b=second session etc.). Each session has two files a .raw and a .art. 
 The .raw files contain the raw waves  and the .art contain artifacting data for each session. Use both files to build raw waves. 
 <br><u>.art file key </u>
-Same dimensions as the raw data. Gives a coloring to the EEG data, that shows how reliable that data is.
+Same dimensions as the raw data. Gives a coloring to the EEG data, that shows how reliability of the data. 
 * 0= Reliable (black)
 * 1= Not Reliable (red)
 * 2= May or may not be reilable,to be used or discarded (blue)
