@@ -53,31 +53,20 @@ Same dimensions as the raw data. Gives a coloring to the EEG data, that shows ho
 * 19 columns, ~61440 rows (256 s time step total of 4 minute data)
 
 ## Analysis
-1. Extract (𝜶, 𝛽, 𝛾,𝜃) Wavefo
+1. Extract (𝜶, 𝛽, 𝛾,𝜃) Waveform
 2. Divide into 2s epochs
-3. 
-
-
-Do below for each epoch 
--Brainwaves (delta, theta, alpha, beta, gamma) 
-→ channel coherence
-→channel correlation Pearson 
-
-Embedding a lower dimensional manifold 
--reduce dimensionality 
-→reduce component analysis
-→Localized linear embedding (tSNE)
-
--Look at distances in reduced space between 2013 & 2014 baselines 
-
-## Results
-
-### PreProccessing
-* Seperate out Different waves
-* Features extraction using neural network
-* FFT : static
-* Short-Time FFT  : FFT with window
-* Wavelet
+3. Features extraction using neural netork
+4. FFT: static
+5. Short-Time FFT: FFR with window
+6. Wavelet
+3. Computer static features for each epoch
+4. Channel coherence (each wave)
+5. Channel correlation Pearson (each wave)
+6. Embedding a lower dimensional manifold 
+7. Reduce dimensionality 
+8. Reduce component analysis
+9. Localized linear embedding (tSNE)
+10. Analyse distances in reduced space between 2013 & 2014 baselines 
 
 ### Clustering
 
@@ -89,6 +78,9 @@ Embedding a lower dimensional manifold
 
 * Dynamics Time warping (Distance Meausure)
 
-### Prediction Model
+## Results
+The data did not show siginificant differences in the channel cohernece in alpha frequency between concussed and non concussed subjects. Additional features need
+to be analyzed in order to determine if EEG is a reliable identifier for a subject with mTBI.
+
 
 
