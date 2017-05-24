@@ -1,7 +1,5 @@
 # Neuro-ID
-* Is EEG test-retest data consistent enough to identify an individual? 
-* Do mTBI and concussive events change the effectiveness of the  ability of an algorithm to identify an individual due to brainwave 
-changes?
+How reliable is EEG as a consistent identifier for individuals with Mild Traumatic Brain Injury (MTBI)?
 
 ## Scope
 Pattern recognition and classification in time series data 
@@ -30,6 +28,8 @@ examined to ensure quality contact.  If contact is unacceptable, conductive gel 
 the scalp to exfoliate the location of the electrode in order to assist in gaining proper contact.  Once contact is deemed 
 acceptable, a auditory P300 Eyes Closed Protocol is run. The patient is instructed to avoid any synchronized motions and blinks 
 during the P300 test as this will affect the quality of the data.   
+![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
+
 
 ### <i> Data </i>
 The subject data is anonymized with number labels, each number represents a different subject. The letters attached to the numbers
@@ -41,10 +41,6 @@ Same dimensions as the raw data. Gives a coloring to the EEG data, that shows ho
 * 1= Not Reliable (red)
 * 2= May or may not be reilable,to be used or discarded (blue)
 
-<b> Raw EEG Data </b>
-* 19 columns, ~61440 rows (256 s time step total of 4 minute data)
-* 98 Subjects
-
 ### <i> Waves in EEG </i>
 <b> Delta:</b> 0-4 Hz
 <br><b> Theta:</b> 4-8 Hz
@@ -52,10 +48,15 @@ Same dimensions as the raw data. Gives a coloring to the EEG data, that shows ho
 <br><b> Beta:</b> 13-20 Hz
 <br><b> Gamma:</b> 20-40 Hz
 
+<b> Data Files </b>
+* 98 subjects
+* 19 columns, ~61440 rows (256 s time step total of 4 minute data)
+
 ## Analysis
-Feature Extraction
-→data cleaning
-→sessions split into epochs  → 2 seconds
+1. Extract (𝜶, 𝛽, 𝛾,𝜃) Wavefo
+2. Divide into 2s epochs
+3. 
+
 
 Do below for each epoch 
 -Brainwaves (delta, theta, alpha, beta, gamma) 
@@ -68,6 +69,8 @@ Embedding a lower dimensional manifold
 →Localized linear embedding (tSNE)
 
 -Look at distances in reduced space between 2013 & 2014 baselines 
+
+## Results
 
 ### PreProccessing
 * Seperate out Different waves
