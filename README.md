@@ -36,14 +36,14 @@ The subject data is anonymized with number labels, each number represents a diff
 represent the session (i.e. a=first session, b=second session etc.). Each session has two files a .raw and a .art. 
 The .raw files contain the raw waves  and the .art contain artifacting data for each session. Use both files to build raw waves. 
 <br><u>.art file key </u>
-* 0= good data 
-* 1= bad data that should be discarded 
-* 2= okay data that can either be used or discarded
+Same dimensions as the raw data. Gives a coloring to the EEG data, that shows how reliable that data is.
+* 0= Reliable (black)
+* 1= Not Reliable (red)
+* 2= May or may not be reilable,to be used or discarded (blue)
 
 <b> Raw EEG Data </b>
 * 19 columns, ~61440 rows (256 s time step total of 4 minute data)
 * 98 Subjects
-
 
 ### <i> Waves in EEG </i>
 <b> Delta:</b> 0-4 Hz
@@ -51,25 +51,6 @@ The .raw files contain the raw waves  and the .art contain artifacting data for 
 <br><b> Alpha:</b> 8-13 Hz
 <br><b> Beta:</b> 13-20 Hz
 <br><b> Gamma:</b> 20-40 Hz
-
-
-**Raw EEG Data:**
-
-
-**Art file (Artifacts)**
-Same dimensions as the raw data. Gives a coloring to the EEG data, that shows how reliable that data is.
-
-* 0 : Black (reliable)
-* 1 : Red (Not reliable)
-* 2 : Blue (May or May not be reliable)
-
-**P300 Data**
-
-The subjects are hearing a beep sound at a specific pitch at regular interval. Than randomly a high pitch sound is exposed to the subject, which creates a spike in the subjects EEG data.
-
-Each subject is exposed to 40 of these high pitch sounds at a random time frame.
-
-More speficially the change of the EEG Data with regard to the high pitch sound is an amplitude increase. The amplitude increase is observed in any frequency band (depends at which frequency band the subject's EEG data is at the time of hearing the high pitch sound).
 
 ## Analysis
 Feature Extraction
