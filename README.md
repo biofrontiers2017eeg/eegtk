@@ -22,7 +22,13 @@ resting state throughout the duration of the recording. During the recording ses
 the data analysis for accuracy. 
 
 ### <i> Data </i>
-The data is labelled with 
+The subject data is anonymized with number labels, each number represents a different subject. The letters attached to the numbers
+represent the session (i.e. a=first session, b=second session etc.). Each session has two files a .raw and a .art. 
+The .raw files contain the raw waves  and the .art contain artifacting data for each session. Use both files to build raw waves. 
+<br><u>.art file key </u>
+* 0= good data 
+* 1= bad data that should be discarded 
+* 2= okay data that can either be used or discarded
 
 ### <i> Biosignal Recording and EEG Parameterisation <i>
 The EEG recordings were performed with electrodes secured at sites FP1, FP2, F7, F3, Fz, F4, F8, T3, C3, Cz, C4, T4, T5, P3, Pz,
@@ -96,5 +102,4 @@ Embedding a lower dimensional manifold
 
 ### Prediction Model
 
-![Image of Yaktocat]
 
