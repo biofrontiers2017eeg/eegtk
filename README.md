@@ -1,8 +1,11 @@
 # Neuro-ID
+* Is EEG test-retest data consistent enough to identify an individual? 
+* Do mTBI and concussive events change the effectiveness of the  ability of an algorithm to identify an individual due to brainwave 
+changes?
 
 ## Scope
+Pattern Recognition and Classification in Time Series Data 
 
-Is EEG test-retest data consistent enough to identify an individual? Do mTBI and concussive events change the effectiveness of the algorithm due to brainwave changes?
 
 ## Abstract
 Raw brainwave data taken from an electroencephalogram (EEG) system has been shown to be unique for each individual.  Developing a machine learning algorithm to 
