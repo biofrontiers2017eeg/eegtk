@@ -37,26 +37,28 @@ def extractWaves(session, n=4001, samplingRate=256, wave='all'):
     :return: 0 if success, 1 if it failed
     :rtype: int
     """
+   
     # Create a dictionary of filter coefficients, the keys are waveforms
     b = {}
     if (wave == 'all'):
         waves = ['delta', 'theta', 'alpha', 'beta', 'gamma']
         for i in waves:
-            b[i] = FIR(n,samplingRate, wave)
+            b[i] = FIR(n,samplingRate, i)
     else:
         b[wave] = FIR(n,samplingRate, wave)
 
     if not hasattr(session, "waves"):
         # create a dictionary of pandas dataframes
         session.waves = {}
-
+    chop = int((n-1)/2)
     columns = [col for col in session.raw.columns if col not in ignore_columns]
     for key in b:
+        df = pd.DataFrame()
         for col in columns:
             # apply filter, via convolution
-            df = pd.DataFrame()
             s = pd.Series(np.convolve(session.raw[col], b[key], mode='valid'))
-            df["_".join([col,wave])] = s
+            df[col] = s
+        df['time'] = session.raw['time'][chop:-chop].reset_index(drop=True)
         session.waves[key] = df
     return 0
 
