@@ -18,7 +18,7 @@ def printINFO(v, string):
 def SaveWave2csv(pid, v=False, extension='raw', inOneCSV=False, nfilterCoeff=4001):
     printINFO(v, "Patient ID: {}".format(pid))
     
-    p = patient.Patient(pid)
+    p = patient.Patient(pid, '')
 
     if p.pre_test is not None:
         printINFO(v, "Extracting waves for pre_test!")
@@ -95,7 +95,7 @@ def SaveWave2csv(pid, v=False, extension='raw', inOneCSV=False, nfilterCoeff=400
 
             if p.post_test is not None:
                 # save post_end to csv
-                fname = "".join([pid, getLetter(nintermediate+2), '_', wave,'.', extension])
+                fname = "".join([pid, getLetter(nintermediate+1), '_', wave,'.', extension])
                 fpath = os.path.join(path,fname)
                 printINFO(v,"Saving file: {}".format(fpath))
                 p.post_test.waves[wave].to_csv(fpath, index=False)
@@ -130,7 +130,7 @@ if __name__ == '__main__':
     if args.pid:
         pid = [args.pid]
     else:
-        pid = np.arange(1,99)
+        pid = np.arange(55, 99)
     
     for i in pid:
         SaveWave2csv(str(i), v=args.v, inOneCSV=not(args.csvPerWave), extension=extension, nfilterCoeff=nfilterCoeff)
