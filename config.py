@@ -3,9 +3,9 @@ import numpy as np
 
 # replace this with the directory containing the data
 #data_directory = "/home/fout/biof/Hackathon/dan csv 1-17-15"
-data_directory = ""
-exp_directory = ""
-feature_directory = ""
+data_directory = "/home/fout/biof/data"
+exp_directory = "/home/fout/biof/brain_age_from_eeg/experiments"
+feature_directory = "/home/fout/biof/features"
 
 # lists of different populations
 pid_testlist = np.arange(1, 34)  # patients 1-33 had no concussions

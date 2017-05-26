@@ -8,20 +8,20 @@ from config import pid_noConcussion, pid_3stepProtocol, pid_testRetest, pid_conc
 from patient import Patient
 from embedding import Embedding
 
-colors = cycle(['r', 'b', 'g', 'y', 'c', 'm', 'k'])
+colors_cycler = cycle(['r', 'b', 'g', 'y', 'c', 'm', 'k'])
 
 
 def embed_and_plot(emb, examples, all_color=None, linewidth=2):
     pre_post_distances = []
-    alpha = 0.2 / np.log(len(examples)) if len(examples) > 1 else 1
+    alpha = 0.4 / np.log(len(examples)) if len(examples) > 1 else 1
     for tup in examples:
         if all_color is None:
             if sys.version_info < (3, 0):
                 # for python2 use
-                color = colors.next()
+                color = colors_cycler.next()
             else:
                 # for python3 use
-                color = next(colors)
+                color = next(colors_cycler)
         else:
             color = all_color
         pid = tup[0]
@@ -87,11 +87,36 @@ emb.train(train_data)
 # visualize embedding
 colors = ["r", "b"]
 f = plt.figure(figsize=(10, 10))
+dists = []
 for label, examples_list, color in zip(labels, examples_lists, colors):
-    distances = embed_and_plot(emb, examples_list, all_color=color)
-plt.title("pre/post test centroid distance".format())
+    dists.append(embed_and_plot(emb, examples_list, all_color=color))
+plt.title("pre/post test centroid distance")
 plt.xlabel("PC1")
 plt.ylabel("PC2")
 #plt.legend()
-plt.savefig(subfolder + "_pc1vs2", dpi=300, transparent=True)
+plt.savefig(subfolder + "_pc1vs2_combined", dpi=300, transparent=True)
 plt.show()
+plt.close()
+
+# plot histograms
+f = plt.figure(figsize=(10, 10))
+for label, distances, color in zip(labels, dists, colors):
+    plt.title("pre/post test centroid distance")
+    plt.xlabel("Distance")
+    plt.ylabel("Count")
+    plt.hist(distances)
+    plt.savefig(subfolder + "_hist_" + label, dpi=300, transparent=True)
+    plt.close()
+
+# plot pc plot on its own
+colors = ["r", "b"]
+for label, examples_list, color in zip(labels, examples_lists, colors):
+    f = plt.figure(figsize=(10, 10))
+    distances = embed_and_plot(emb, examples_list)
+    plt.title("pre/post test centroid distance".format())
+    plt.xlabel("PC1")
+    plt.ylabel("PC2")
+    #plt.legend()
+    plt.savefig(subfolder + "_pc1vs2_" + label, dpi=300, transparent=True)
+    plt.show()
+    plt.close()
